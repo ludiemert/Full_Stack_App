@@ -15,12 +15,11 @@ export const register = (req, res) => {
     // Store hash in your password DB.
 
     const q = "INSERT INTO users(`username`, `email`, `password`) VALUES (?)";
-    const values = [req.body.username. req.body.email, hash];
+    const values = [req.body.username, req.body.email, hash];
 
-    db.query(q, [values], (err, data) => {
+    db.query(q, [values], (err,data) => {
       if (err) return res.json(err);
-      return res.status(200).json("User has been created")
-      //O usuário foi criado
+      return res.status(200).json("User has been created");
     });
   });
 };
