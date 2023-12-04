@@ -1,18 +1,19 @@
 import axios from "axios";
+import moment from "moment";
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useLocation } from "react-router-dom";
 
 const Write = () => {
-  const state = useLocation().state
+  const state = useLocation().state;
   const [value, setValue] = useState(state?.title || "");
   const [title, setTitle] = useState(state?.desc || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
 
-   // Define the upload function
-   const upload = async () => {
+  // Define the upload function
+  const upload = async () => {
     try {
       // Create a new FormData object and append the file to it
       const formData = new FormData();
@@ -20,10 +21,10 @@ const Write = () => {
 
       // Send a POST request to upload the file
       const res = await axios.post("/upload", formData);
-      return res.data
+      return res.data;
 
       // Return the filename of the uploaded file
-    //  return res.data;
+      //  return res.data;
     } catch (err) {
       console.log(err);
     }
@@ -31,12 +32,25 @@ const Write = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const imgUrl = upload()
+    const imgUrl = upload();
 
     try {
-
-    }catch(err){
-      console.log(err)
+      state
+        ? await axios.put(`/posts/${state.id}`, {
+            title,
+            desc: value,
+            cat,
+            img: file ? imgUrl : "",
+          })
+        : await axios.post(`/posts/`, {
+            title,
+            desc: value,
+            cat,
+            img: file ? imgUrl : "",
+            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+          });
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -44,7 +58,8 @@ const Write = () => {
     <div className="add">
       <div className="content">
         <input
-          type="text" value={title}
+          type="text"
+          value={title}
           placeholder="Title"
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -87,7 +102,8 @@ const Write = () => {
 
           <div className="cat">
             <input
-              type="radio" checked={cat ==="art"}
+              type="radio"
+              checked={cat === "art"}
               name="cat"
               value="art"
               id="art"
@@ -98,7 +114,8 @@ const Write = () => {
 
           <div className="cat">
             <input
-              type="radio" checked={cat ==="science"}
+              type="radio"
+              checked={cat === "science"}
               name="cat"
               value="science"
               id="science"
@@ -109,7 +126,8 @@ const Write = () => {
 
           <div className="cat">
             <input
-              type="radio" checked={cat ==="technology"}
+              type="radio"
+              checked={cat === "technology"}
               name="cat"
               value="technology"
               id="technology"
@@ -120,7 +138,8 @@ const Write = () => {
 
           <div className="cat">
             <input
-              type="radio" checked={cat ==="cinema"}
+              type="radio"
+              checked={cat === "cinema"}
               name="cat"
               value="cinema"
               id="cinema"
@@ -131,7 +150,8 @@ const Write = () => {
 
           <div className="cat">
             <input
-              type="radio" checked={cat ==="design"}
+              type="radio"
+              checked={cat === "design"}
               name="cat"
               value="design"
               id="design"
@@ -142,7 +162,8 @@ const Write = () => {
 
           <div className="cat">
             <input
-              type="radio" checked={cat ==="food"}
+              type="radio"
+              checked={cat === "food"}
               name="cat"
               value="foot"
               id="foot"
